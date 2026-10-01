@@ -1,213 +1,178 @@
-🏥 MediCRM -- Hospital Management System
+🏥 MediCRM Backend
 
-MediCRM is a microservices-based Hospital Management System
-designed to connect hospitals, doctors, patients, appointments, beds,
-medicines, prescriptions, emergency services and billing in one
-centralized platform.
+MediCRM is a production-oriented, microservices-based Hospital
+Management and Hospital Discovery platform built with Java and Spring
+Boot.
 
-The system focuses on making hospital discovery and patient care easier
-by helping users find the right hospital, discover available doctors
-and beds, book appointments according to consultation time, and handle
-emergency requirements efficiently.
+The backend is designed not only to manage hospital operations, but also
+to help patients and doctors find the right hospital based on doctors,
+departments, beds, services and availability.
 
-🚀 Project Overview
+🎯 Vision
 
-MediCRM is developed using a Spring Boot Microservices Architecture.
-The backend is divided into independent services so that each major
-hospital-management module can be developed, deployed and scaled
-separately.
+MediCRM connects the complete hospital and patient journey:
 
-🎯 Main Goals
+Hospital Discovery
+      ↓
+Doctor / Department Discovery
+      ↓
+Bed Availability
+      ↓
+Appointment Booking
+      ↓
+Consultation
+      ↓
+Prescription / Lab Test
+      ↓
+Admission
+      ↓
+Billing
+      ↓
+Payment
+      ↓
+Patient History
 
-🔎 Easily find the right hospital for a doctor or patient.
+The long-term goal is to evolve MediCRM into a Hospital CRM + Hospital
+Discovery + Emergency Support Platform.
 
-👨‍⚕️ Find which doctors are available in a particular hospital.
+🛠️ Backend Technology Stack
 
-🛏️ Check whether beds are available in a hospital.
+Technology                    Purpose
 
-🚑 Find a suitable hospital during an emergency.
+☕ Java                       Backend programming
+🌱 Spring Boot                Microservice development
+🗃️ Spring Data JPA            ORM and database access
+🌐 REST API                   Client and service communication
+🧩 Microservices              Independent business modules
+🚪 Spring Cloud API Gateway   Central API entry point
+🧭 Eureka Server              Service discovery
+⚖️ Load Balancer              Request distribution
+🔗 OpenFeign                  Microservice-to-microservice communication
+🐬 MySQL                      Relational database
+🧠 ModelMapper                Entity / DTO mapping
+📖 Swagger / OpenAPI          API documentation
+⚡ Redis                      Planned caching layer
+🔔 Notification Service       Planned notifications
+📝 Audit Service              Planned activity tracking
+🤖 AI Service                 Planned recommendation system
+🐙 Git / GitHub               Version control
 
-📅 Book appointments according to a doctor's consultation time.
-
-💊 Manage prescriptions and medicines.
-
-🧪 Manage lab tests and medical history.
-
-🏥 Manage rooms, admissions and room allocations.
-
-💳 Manage billing, bill items and payments.
-
-🔐 Keep hospital data isolated using hospital_id.
-
-🏗️ System Architecture
+🏗️ Microservices Architecture
 
 flowchart TB
 
-    Client["🌐 Web / Frontend"]
+    Client["🌐 Web / Mobile Client"]
 
     Gateway["🚪 API Gateway"]
 
     Eureka["🧭 Eureka Server"]
-
-    LB["⚖️ Load Balancer"]
 
     Hospital["🏥 Hospital Service"]
     Department["🏢 Department Service"]
     Doctor["👨‍⚕️ Doctor Service"]
     Staff["👨‍💼 Staff Service"]
     User["👤 User Service"]
-    Room["🛏️ Room Service"]
+    Room["🛏️ Room / Bed Service"]
     Medicine["💊 Medicine Service"]
 
-    Patient["🧑‍🦽 Patient Service"]
+    Patient["🧑 Patient Service"]
     Appointment["📅 Appointment Service"]
     Prescription["💉 Prescription Service"]
-    Lab["🧪 Lab Test Service"]
+    Lab["🧪 Lab Service"]
     Medical["📋 Medical History Service"]
     Billing["💳 Billing Service"]
 
+    Notification["🔔 Notification Service"]
+    Audit["📝 Audit Service"]
+    AI["🤖 AI Recommendation Service"]
+    Analytics["📊 Analytics Service"]
+
+    Redis["⚡ Redis Cache"]
+    DB["🐬 MySQL"]
+
     Client --> Gateway
-    Gateway --> LB
 
-    LB --> Hospital
-    LB --> Department
-    LB --> Doctor
-    LB --> Staff
-    LB --> User
-    LB --> Room
-    LB --> Medicine
-    LB --> Patient
-    LB --> Appointment
-    LB --> Prescription
-    LB --> Lab
-    LB --> Medical
-    LB --> Billing
+    Gateway --> Hospital
+    Gateway --> Department
+    Gateway --> Doctor
+    Gateway --> Staff
+    Gateway --> User
+    Gateway --> Room
+    Gateway --> Medicine
+    Gateway --> Patient
+    Gateway --> Appointment
+    Gateway --> Prescription
+    Gateway --> Lab
+    Gateway --> Medical
+    Gateway --> Billing
 
-    Eureka -. Service Discovery .-> Hospital
-    Eureka -. Service Discovery .-> Department
-    Eureka -. Service Discovery .-> Doctor
-    Eureka -. Service Discovery .-> Staff
-    Eureka -. Service Discovery .-> Room
-    Eureka -. Service Discovery .-> Patient
-    Eureka -. Service Discovery .-> Appointment
-    Eureka -. Service Discovery .-> Prescription
-    Eureka -. Service Discovery .-> Billing
+    Hospital -.-> Eureka
+    Department -.-> Eureka
+    Doctor -.-> Eureka
+    Staff -.-> Eureka
+    Room -.-> Eureka
+    Patient -.-> Eureka
+    Appointment -.-> Eureka
+    Prescription -.-> Eureka
+    Billing -.-> Eureka
 
-🛠️ Backend Technology Stack
+    Appointment --> Notification
+    Billing --> Notification
 
-Technology             Purpose
+    Services["⚙️ Business Services"] --> Redis
+    Services --> DB
+    Services --> Audit
+    Services --> AI
+    Services --> Analytics
 
-☕ Java                Backend programming language
-🌱 Spring Boot         Microservice development
-🗃️ Spring Data JPA     Database interaction / ORM
-🌐 REST API            Communication with frontend and services
-🔗 Microservices       Independent business modules
-🚪 API Gateway         Single entry point for APIs
-🧭 Eureka Server       Service discovery
-⚖️ Load Balancer       Distributes requests between service instances
-🔄 OpenFeign           Communication between microservices
-🐬 MySQL               Relational database
-🧩 ModelMapper         Entity ↔ DTO mapping
-📖 Swagger / OpenAPI   API documentation
-🐙 Git / GitHub        Version control
+🧩 Core Services
 
-🗄️ Database Design
+Hospital Management
 
-The database is divided into two major areas:
+🏥 Hospital Service
+🏢 Department Service
+👨‍⚕️ Doctor Service
+👨‍💼 Staff Service
+👤 User Service
+🛏️ Room / Bed Service
+💊 Medicine Service
 
-Part 1 -- Hospital Management
+Patient Management
 
-Hospital
-   │
-   ├── Departments
-   │      └── Doctors
-   │
-   ├── Staff
-   │
-   ├── Users
-   │
-   ├── Rooms
-   │
-   └── Medicines
+🧑 Patient Service
+📅 Appointment Service
+💉 Prescription Service
+🧪 Lab Service
+📋 Medical History Service
+💳 Billing Service
 
-Part 2 -- Patient Management
+Advanced Services
 
-Patient
-   │
-   ├── Appointments
-   │       └── Doctor
-   │
-   ├── Prescriptions
-   │       └── Prescription Items
-   │              └── Medicines
-   │
-   ├── Lab Tests
-   │
-   ├── Room Allocations
-   │
-   ├── Medical History
-   │
-   ├── Emergency Contacts
-   │
-   ├── Insurance
-   │
-   └── Bills
-          └── Bill Items
+🔔 Notification Service
+📝 Audit Service
+📊 Analytics Service
+🤖 AI Recommendation Service
 
-🧩 Core Database Entities
+🗄️ Database Architecture
 
 Hospital Side
-
-hospitals
-
-departments
-
-doctors
-
-staffs
-
-users
-
-rooms
-
-medicines
-
-Patient Side
-
-patients
-
-appointments
-
-prescriptions
-
-prescription_items
-
-lab_tests
-
-room_allocations
-
-medical_history
-
-emergency_contacts
-
-insurance
-
-bills
-
-bill_items
-
-🔗 Important Relationships
 
 erDiagram
 
     HOSPITALS ||--o{ DEPARTMENTS : contains
     HOSPITALS ||--o{ DOCTORS : has
     HOSPITALS ||--o{ STAFFS : employs
+    HOSPITALS ||--o{ USERS : manages
     HOSPITALS ||--o{ ROOMS : owns
     HOSPITALS ||--o{ MEDICINES : stores
-    HOSPITALS ||--o{ PATIENTS : registers
 
     DEPARTMENTS ||--o{ DOCTORS : manages
+
+Patient Side
+
+erDiagram
+
+    HOSPITALS ||--o{ PATIENTS : registers
 
     PATIENTS ||--o{ APPOINTMENTS : books
     DOCTORS ||--o{ APPOINTMENTS : handles
@@ -215,11 +180,10 @@ erDiagram
     PATIENTS ||--o{ PRESCRIPTIONS : receives
     DOCTORS ||--o{ PRESCRIPTIONS : creates
     PRESCRIPTIONS ||--o{ PRESCRIPTION_ITEMS : contains
-
     MEDICINES ||--o{ PRESCRIPTION_ITEMS : prescribed
 
     PATIENTS ||--o{ LAB_TESTS : takes
-    PATIENTS ||--o{ ROOM_ALLOCATIONS : allocated
+    PATIENTS ||--o{ ROOM_ALLOCATIONS : receives
     PATIENTS ||--o{ MEDICAL_HISTORY : has
     PATIENTS ||--o{ EMERGENCY_CONTACTS : has
     PATIENTS ||--o{ INSURANCE : owns
@@ -227,27 +191,57 @@ erDiagram
     PATIENTS ||--o{ BILLS : receives
     BILLS ||--o{ BILL_ITEMS : contains
 
-⭐ Key Features
+🔐 Hospital-Wise Data Isolation
 
-1. 🔎 Find the Right Hospital
+Hospital-specific data is associated with hospital_id.
 
-MediCRM helps users discover hospitals based on their requirements.
+Hospital 1
+ ├── Departments
+ ├── Doctors
+ ├── Staff
+ ├── Patients
+ ├── Rooms / Beds
+ └── Medicines
 
-A patient or doctor can find:
+Hospital 2
+ ├── Departments
+ ├── Doctors
+ ├── Staff
+ ├── Patients
+ ├── Rooms / Beds
+ └── Medicines
 
-Hospital information
+Example APIs:
 
-Hospital location/details
+GET /api/doctor/hospital/{hospitalId}
 
-Available departments
+GET /api/staff/hospital/{hospitalId}
 
-Doctors associated with the hospital
+GET /api/room/hospital/{hospitalId}
 
-Available rooms/beds
+GET /api/medicine/hospital/{hospitalId}
+
+This design supports hospital-level data separation.
+
+⭐ Core Features
+
+1. 🔎 Hospital Discovery
+
+Patients and doctors can search for hospitals and inspect:
+
+Hospital details
+
+Departments
+
+Doctors
+
+Available beds
 
 Hospital services
 
-Example Flow
+Emergency support
+
+Contact information
 
 User
  ↓
@@ -255,99 +249,194 @@ Search Hospital
  ↓
 Hospital Service
  ↓
-Find Hospital
+Check Doctors
  ↓
-Check Doctors + Beds + Services
+Check Beds
  ↓
-Display Suitable Hospital
+Check Services
+ ↓
+Suitable Hospital
 
-2. 👨‍⚕️ Find Doctor + 🛏️ Bed Availability
+2. 👨‍⚕️ Doctor Discovery
 
-A major feature of MediCRM is connecting doctor availability with
-hospital availability.
-
-Users can check:
+Users can find doctors based on:
 
 Hospital
-   │
-   ├── 👨‍⚕️ Doctors
-   │      ├── Doctor Name
-   │      ├── Specialization
-   │      ├── Experience
-   │      └── Consultation Fee
-   │
-   └── 🛏️ Rooms / Beds
-          ├── Total Beds
-          ├── Occupied Beds
-          └── Available Beds
 
-This helps a patient understand:
+Department
 
-Which hospital has the required doctor and whether a bed is
-available there.
+Specialization
 
-3. 🚑 Emergency Hospital Discovery
+Experience
 
-During an emergency, finding a suitable hospital quickly is important.
+Consultation fee
 
-MediCRM is designed to support emergency hospital discovery by combining
-hospital information with:
+Availability
 
-🏥 Hospital availability
+Example:
 
-👨‍⚕️ Doctor availability
+🏥 Hospital A
 
-🛏️ Bed availability
+Cardiology
+ ├── Dr. Rahul Kumar
+ ├── Dr. Amit Sharma
+ └── Dr. Neha Singh
 
-🩺 Medical services
+3. 🛏️ Real-Time Bed Management
 
-📍 Hospital information
+Beds should support operational states:
+
+AVAILABLE
+OCCUPIED
+RESERVED
+CLEANING
+MAINTENANCE
+
+Example:
+
+Room 101
+
+BED-01 → AVAILABLE
+BED-02 → OCCUPIED
+BED-03 → CLEANING
+BED-04 → RESERVED
+
+Bed Lifecycle
+
+Patient Discharge
+      ↓
+   CLEANING
+      ↓
+Cleaning Complete
+      ↓
+  AVAILABLE
+
+This makes bed availability more realistic than simply storing a single
+count.
+
+4. 👨‍⚕️ Doctor Availability
+
+Doctors can have availability states:
+
+AVAILABLE
+BUSY
+ON_LEAVE
+OFFLINE
+EMERGENCY_DUTY
+
+Example:
+
+Dr. Rahul Kumar
+Cardiology
+
+10:00 - 12:00  🟢 Available
+12:00 - 01:00  🔴 Busy
+04:00 - 06:00  🟢 Available
+
+5. 📅 Smart Appointment Booking
+
+Appointments are based on the doctor's consultation schedule.
+
+flowchart LR
+
+    A["🧑 Patient"] --> B["🏥 Hospital"]
+    B --> C["🏢 Department"]
+    C --> D["👨‍⚕️ Doctor"]
+    D --> E["🕐 Consultation Slots"]
+    E --> F["📅 Book Slot"]
+    F --> G["✅ Appointment"]
+
+Example:
+
+Doctor Consultation
+10:00 AM - 01:00 PM
+
+15-minute slots
+
+10:00 ✅
+10:15 ✅
+10:30 ❌
+10:45 ✅
+11:00 ✅
+
+The backend should prevent double booking of the same slot.
+
+6. 🚑 Emergency Mode
+
+A dedicated emergency workflow can combine:
+
+Hospital
++
+Doctor Availability
++
+Bed Availability
++
+Emergency Facility
++
+Location
 
 Emergency Flow
 
 flowchart LR
 
-    A["🚑 Emergency"] --> B["🔎 Find Hospital"]
-    B --> C["🏥 Check Hospital"]
-    C --> D["👨‍⚕️ Check Doctor"]
-    C --> E["🛏️ Check Bed"]
-    C --> F["🩺 Check Services"]
+    A["🚑 Emergency"] --> B["📍 Location"]
+    B --> C["🏥 Find Hospitals"]
+
+    C --> D["👨‍⚕️ Doctor Availability"]
+    C --> E["🛏️ Bed Availability"]
+    C --> F["🚨 Emergency Facility"]
 
     D --> G["✅ Suitable Hospital"]
     E --> G
     F --> G
 
-    G --> H["📞 Contact / Visit Hospital"]
-
 The goal is to reduce the time required to identify a hospital that can
 handle the patient's requirement.
 
-4. 📅 Appointment Booking According to Consultation Time
+Emergency recommendations are intended as an information and routing
+feature, not as a substitute for professional medical judgment or
+emergency services.
 
-MediCRM supports appointment booking based on a doctor's consultation
-schedule.
+7. 🏥 Hospital Comparison
 
-Appointment Flow
+Patients can compare hospitals using available operational information.
 
-Patient
-   ↓
-Select Hospital
-   ↓
-Select Department
-   ↓
-Select Doctor
-   ↓
-Check Consultation Time
-   ↓
-Select Available Slot
-   ↓
-Book Appointment
-   ↓
-Appointment Confirmed
+                 Hospital A   Hospital B   Hospital C
 
-This avoids unnecessary waiting and helps organize doctor consultations.
+Cardiology           ✅           ✅           ❌
+Doctors              5            2            0
+Available Beds      12            4           18
+Emergency            ✅           ❌            ✅
+Lab                  ✅           ✅            ✅
 
-🧑‍⚕️ Patient Journey
+This makes hospital discovery more useful than a simple hospital
+directory.
+
+8. 🤖 AI Hospital Recommendation
+
+The planned AI layer can recommend hospitals based on structured
+requirements.
+
+Example input:
+
+Problem: Chest pain
+Location: Kanpur
+Emergency: Yes
+
+The system can use available backend data to surface relevant:
+
+🏥 Hospitals
+👨‍⚕️ Departments / Doctors
+🛏️ Bed Availability
+🚨 Emergency Facilities
+📍 Location
+
+The AI should assist with finding relevant services, not diagnose
+medical conditions.
+
+9. 🧑‍⚕️ Complete Patient Timeline
+
+A patient can have a complete journey:
 
 flowchart LR
 
@@ -360,61 +449,228 @@ flowchart LR
     G["💳 Billing"] -->
     H["💰 Payment"]
 
-Patient Journey
+Example timeline:
 
-Registration -- Patient creates/registers an account.
+01 Oct
+10:00 AM → Appointment
 
-Appointment -- Patient books an appointment.
+01 Oct
+10:30 AM → Consultation
 
-Consultation -- Doctor consults the patient.
+01 Oct
+11:00 AM → Lab Test
 
-Prescription -- Doctor creates prescription.
+01 Oct
+02:00 PM → Prescription
 
-Lab Test -- Required tests are generated.
+02 Oct
+10:00 AM → Discharge
 
-Admission -- Patient can be admitted when required.
+10. 💊 Medicine Inventory
 
-Billing -- Hospital generates the bill.
+Medicine inventory supports:
 
-Payment -- Payment is completed.
+Medicine Name
+Category
+Unit
+Unit Price
+Stock Quantity
+Reorder Level
+Status
 
-🏥 Hospital Management Flow
+Stock Alert
 
-flowchart TB
+Stock > Reorder Level
+        ↓
+    NORMAL
 
-    H["🏥 Hospital"]
+Stock <= Reorder Level
+        ↓
+   ⚠️ LOW STOCK
 
-    H --> D["🏢 Departments"]
-    H --> DOC["👨‍⚕️ Doctors"]
-    H --> S["👨‍💼 Staff"]
-    H --> R["🛏️ Rooms"]
-    H --> M["💊 Medicines"]
-    H --> U["👤 Users"]
+Stock = 0
+        ↓
+ 🔴 OUT OF STOCK
 
-    D --> DOC
-    R --> B["🛏️ Bed Availability"]
+11. 🧪 Lab Test Management
 
-🔄 Microservice Communication
+Lab workflow:
 
-MediCRM uses REST APIs and OpenFeign for communication between services.
+flowchart LR
+
+    A["👨‍⚕️ Doctor"] -->
+    B["🧪 Test Request"] -->
+    C["Sample Collection"] -->
+    D["Processing"] -->
+    E["Report Generated"] -->
+    F["👨‍⚕️ Doctor / 🧑 Patient"]
+
+Possible statuses:
+
+REQUESTED
+SAMPLE_COLLECTED
+PROCESSING
+COMPLETED
+CANCELLED
+
+12. 💳 Smart Billing
+
+Billing can combine multiple hospital services:
+
+Consultation
+      +
+Lab Tests
+      +
+Medicines
+      +
+Room Charges
+      +
+Doctor Charges
+      +
+Other Services
+      ↓
+    BILL
 
 Example:
 
+Consultation       ₹500
+Lab Test           ₹800
+Medicine         ₹1,200
+Room             ₹2,000
+------------------------
+Subtotal         ₹4,500
+Discount           ₹200
+Tax                ₹300
+------------------------
+Total            ₹4,600
+
+13. 🔔 Notification Service
+
+A dedicated Notification Service can handle:
+
+Appointment confirmation
+
+Appointment reminder
+
+Appointment cancellation
+
+Doctor availability changes
+
+Bed allocation
+
+Bill generation
+
+Payment confirmation
+
+Architecture:
+
 Appointment Service
-        │
-        │ hospitalId
         ↓
-   Hospital Service
-        │
+Notification Service
         ↓
- Hospital Validation
+ ┌──────┼──────┐
+ ↓      ↓      ↓
+Email   SMS   In-App
 
-For example, before creating an appointment, the Appointment Service can
-communicate with the Hospital Service to verify that the supplied
-hospitalId exists.
+14. 📝 Audit Log Service
 
-Similarly, services can communicate using service names registered with
-Eureka.
+For production environments, important actions can be recorded.
+
+WHO
+WHAT
+WHEN
+
+Example:
+
+Doctor Rahul
+Updated Patient #102
+01 Oct 2026 10:32 AM
+
+Another example:
+
+Hospital Admin
+Changed BED-102
+OCCUPIED → AVAILABLE
+
+Planned service:
+
+AUDIT-SERVICE
+
+15. 📊 Hospital Analytics
+
+Hospital administrators can see:
+
+Total Patients
+Today's Appointments
+Available Beds
+Occupied Beds
+Total Doctors
+Today's Revenue
+
+Possible analytics:
+
+Patients per Month
+Appointments per Month
+Revenue
+Bed Occupancy
+Doctor Utilization
+Medicine Consumption
+
+Planned:
+
+ANALYTICS-SERVICE
+
+16. 📱 Patient Portal
+
+Patients can access:
+
+My Profile
+My Appointments
+My Doctors
+My Prescriptions
+My Lab Reports
+My Medical History
+My Bills
+My Payments
+
+This creates a complete digital patient experience.
+
+17. 🔐 Role-Based Access Control
+
+Future security architecture can support:
+
+SUPER_ADMIN
+HOSPITAL_ADMIN
+DOCTOR
+STAFF
+RECEPTIONIST
+PATIENT
+
+Example permissions:
+
+Doctor
+ ├── Patients
+ ├── Appointments
+ ├── Prescriptions
+ └── Medical History
+
+Receptionist
+ ├── Patients
+ ├── Appointments
+ └── Billing
+
+Hospital Admin
+ ├── Doctors
+ ├── Staff
+ ├── Rooms
+ ├── Beds
+ └── Reports
+
+🔄 Microservice Communication
+
+MediCRM uses OpenFeign for internal communication.
+
+Example:
 
 Appointment Service
         │
@@ -422,35 +678,40 @@ Appointment Service
     OpenFeign
         │
         ↓
- Eureka Server
+   Eureka Server
         │
         ↓
  HOSPITAL-SERVICE
 
-🧭 Service Discovery
-
-The project uses Eureka Server for service discovery.
-
-                 🧭 Eureka Server
-                       │
-        ┌──────────────┼──────────────┐
-        ↓              ↓              ↓
- HOSPITAL-SERVICE  DOCTOR-SERVICE  ROOM-SERVICE
-        │              │              │
-        └──────────────┼──────────────┘
-                       ↓
-                Service Discovery
-
-Instead of hardcoding service IP addresses, microservices can
-communicate using registered service names.
-
-Example:
+Example Feign client:
 
 @FeignClient(name = "HOSPITAL-SERVICE")
+public interface HospitalService {
+
+    @GetMapping("/api/hospital/{hospitalId}")
+    Object getSingleHospital(
+            @PathVariable("hospitalId") Long hospitalId
+    );
+}
+
+🧭 Eureka Service Discovery
+
+                  🧭 EUREKA SERVER
+                         │
+          ┌──────────────┼──────────────┐
+          ↓              ↓              ↓
+   HOSPITAL-SERVICE  DOCTOR-SERVICE  ROOM-SERVICE
+          │              │              │
+          └──────────────┼──────────────┘
+                         ↓
+                  Service Discovery
+
+Services register themselves with Eureka and can communicate using
+service names instead of fixed host addresses.
 
 🚪 API Gateway
 
-The API Gateway acts as the common entry point for client requests.
+The API Gateway provides a common entry point.
 
 Frontend
    │
@@ -458,20 +719,19 @@ Frontend
 API Gateway
    │
    ├── /api/hospital/**
+   ├── /api/department/**
    ├── /api/doctor/**
    ├── /api/staff/**
    ├── /api/room/**
    ├── /api/patient/**
    ├── /api/appointment/**
    ├── /api/prescription/**
+   ├── /api/lab/**
    └── /api/billing/**
-
-The Gateway routes requests to the appropriate microservice.
 
 ⚖️ Load Balancing
 
-Load balancing is used when multiple instances of a microservice are
-running.
+When multiple instances of a service are running:
 
                  API Gateway
                       │
@@ -483,69 +743,37 @@ running.
         Doctor Service   Doctor Service
           Instance 1       Instance 2
 
-This helps distribute requests between available service instances.
+Requests can be distributed across available service instances.
 
-🏨 Multi-Hospital Data Isolation
+⚡ Redis Caching -- Planned
 
-A key design principle of MediCRM is hospital-based data isolation.
+Frequently accessed data can be cached.
 
-Most hospital-related entities contain:
+Potential cache candidates:
 
-hospital_id
+Hospital List
+Hospital Details
+Doctor Availability
+Department List
+Bed Availability
+Medicine Information
 
-Example:
+Flow:
 
-Hospital 1
- ├── Doctors
- ├── Staff
- ├── Patients
- ├── Rooms
- └── Medicines
+Request
+   ↓
+Redis Cache?
+  /   \
+Yes    No
+ ↓      ↓
+Data   MySQL
 
-Hospital 2
- ├── Doctors
- ├── Staff
- ├── Patients
- ├── Rooms
- └── Medicines
+Redis should be used carefully for availability-sensitive information so
+stale data does not create incorrect operational decisions.
 
-Data can therefore be filtered using hospital_id.
+🏗️ Backend Layer Structure
 
-GET /api/doctor/hospital/{hospitalId}
-
-GET /api/staff/hospital/{hospitalId}
-
-GET /api/room/hospital/{hospitalId}
-
-This design helps keep different hospitals' operational data separated.
-
-🔐 Backend Design Principles
-
-RESTful API architecture
-
-Microservice-based modules
-
-Database access using Spring Data JPA
-
-Service discovery using Eureka
-
-API routing through API Gateway
-
-Load balancing between service instances
-
-OpenFeign for inter-service communication
-
-Hospital-wise data isolation using hospital_id
-
-DTO-based API layer where required
-
-Centralized exception handling
-
-Swagger/OpenAPI documentation
-
-📁 Typical Microservice Structure
-
-Each service follows a clean layered structure:
+Each microservice follows a layered architecture:
 
 SERVICE
 │
@@ -562,7 +790,7 @@ SERVICE
 │     └── JPA Entity
 │
 ├── DTO
-│     └── Request / Response Objects
+│     └── Request / Response
 │
 ├── Exception
 │     └── Custom Exceptions
@@ -573,113 +801,268 @@ SERVICE
 └── Config
       └── Configuration
 
-📊 Project Highlights
+📁 Suggested Backend Repository Structure
 
-Feature                 Description
+MediCRM-Backend/
+│
+├── Eureka-Server/
+│
+├── API-Gateway/
+│
+├── Hospital-Service/
+│
+├── Department-Service/
+│
+├── Doctor-Service/
+│
+├── Staff-Service/
+│
+├── User-Service/
+│
+├── Room-Service/
+│
+├── Medicine-Service/
+│
+├── Patient-Service/
+│
+├── Appointment-Service/
+│
+├── Prescription-Service/
+│
+├── Lab-Service/
+│
+├── Medical-History-Service/
+│
+├── Billing-Service/
+│
+├── Notification-Service/
+├── Audit-Service/
+├── Analytics-Service/
+└── AI-Recommendation-Service/
 
-🏥 Hospital Discovery   Find suitable hospitals
-👨‍⚕️ Doctor Discovery     Find doctors by hospital/department
-🛏️ Bed Availability     Check available and occupied beds
-🚑 Emergency Support    Identify suitable hospital resources
-📅 Appointment          Book consultation slots
-💊 Prescription         Manage prescriptions and medicines
-🧪 Lab Tests            Manage patient tests and reports
-🛏️ Admission            Manage room allocations
-📋 Medical History      Maintain patient history
-💳 Billing              Generate bills and bill items
-🔄 Microservices        Independent backend services
-🧭 Eureka               Service discovery
-🚪 API Gateway          Central API routing
-⚖️ Load Balancer        Request distribution
-🔗 OpenFeign            Service-to-service communication
+🔄 Complete MediCRM Flow
 
-🎯 Future Scope
+flowchart TB
 
-MediCRM can be extended with:
+    User["🧑 Patient / Doctor"]
 
-🤖 AI-assisted hospital recommendation
+    Search["🔎 Hospital Search"]
 
-🧠 AI-based symptom/department guidance
+    Hospital["🏥 Hospital"]
+    Doctor["👨‍⚕️ Doctor"]
+    Bed["🛏️ Bed"]
+    Appointment["📅 Appointment"]
 
-📍 Location-based hospital discovery
+    Consultation["👨‍⚕️ Consultation"]
+    Prescription["💊 Prescription"]
+    Lab["🧪 Lab Test"]
+    Admission["🛏️ Admission"]
+    Billing["💳 Billing"]
+    Payment["💰 Payment"]
 
-🚑 Emergency ambulance integration
+    User --> Search
 
-🔔 Appointment notifications
+    Search --> Hospital
+    Hospital --> Doctor
+    Hospital --> Bed
 
-📱 SMS/Email notifications
+    Doctor --> Appointment
+    Bed --> Appointment
 
-💳 Online payment integration
+    Appointment --> Consultation
+    Consultation --> Prescription
+    Consultation --> Lab
+    Consultation --> Admission
 
-📊 Hospital analytics dashboard
+    Prescription --> Billing
+    Lab --> Billing
+    Admission --> Billing
 
-📈 Doctor availability analytics
+    Billing --> Payment
 
-🧪 Digital lab reports
+🚀 Production-Level Roadmap
 
-🩸 Blood/donor management
+Phase 1 -- Core Backend
 
-☁️ Cloud deployment and containerization
+✅ Hospital
+✅ Department
+✅ Doctor
+✅ Staff
+✅ Room / Bed
+✅ Medicine
+✅ Patient
+✅ Appointment
+✅ Prescription
+✅ Billing
 
-🏁 Final Architecture Summary
+Phase 2 -- Operational Features
 
-                        ┌──────────────────┐
-                        │     FRONTEND     │
-                        └────────┬─────────┘
-                                 │
-                                 ▼
-                        ┌──────────────────┐
-                        │   API GATEWAY    │
-                        └────────┬─────────┘
-                                 │
-                                 ▼
-                        ┌──────────────────┐
-                        │  LOAD BALANCER   │
-                        └────────┬─────────┘
-                                 │
-              ┌──────────────────┼──────────────────┐
-              │                  │                  │
-              ▼                  ▼                  ▼
-       Hospital Service    Doctor Service     Patient Service
-              │                  │                  │
-              ├──────────┬───────┘                  │
-              │          │                          │
-              ▼          ▼                          ▼
-        Room Service  Staff Service          Appointment Service
-              │                                      │
-              └──────────────┬───────────────────────┘
-                             │
-                             ▼
-                    Prescription / Lab /
-                    Medical / Billing
-                             │
-                             ▼
-                           MySQL
+🔄 Doctor Availability
+🔄 Real-Time Bed Status
+🔄 Smart Appointment Slots
+🔄 Lab Workflow
+🔄 Patient Timeline
+🔄 Medicine Stock Alerts
+🔄 Hospital Comparison
 
-                    ▲
+Phase 3 -- Production Features
+
+🔄 Notification Service
+🔄 Audit Log Service
+🔄 Analytics Service
+🔄 Patient Portal
+🔄 Role-Based Access
+🔄 Redis Caching
+
+Phase 4 -- Next-Level Platform
+
+🤖 AI Hospital Recommendation
+🚑 Emergency Mode
+📍 Location-Based Hospital Discovery
+📊 Advanced Hospital Analytics
+📱 Mobile Application
+☁️ Cloud Deployment
+🐳 Docker / Containerization
+
+🎯 What Makes MediCRM Different?
+
+Traditional Hospital Management Systems mainly focus on internal CRUD
+operations.
+
+MediCRM aims to combine:
+
+                 MediCRM
                     │
-              Eureka Server
-            Service Discovery
+       ┌────────────┼────────────┐
+       ↓            ↓            ↓
+ Hospital CRM   Patient Care   Discovery
+       │            │            │
+       ↓            ↓            ↓
+ Doctors        Appointments   Hospitals
+ Staff          Prescription   Doctors
+ Rooms          Lab Tests      Beds
+ Medicines      Billing        Emergency
 
-💡 Core Idea
+The key product idea is:
 
-MediCRM connects hospital infrastructure with the complete patient
-journey --- from finding the right hospital and doctor to appointment,
-consultation, prescription, lab testing, admission, billing and
-payment.
+Find the right hospital by combining hospital information, doctor
+availability, bed availability and required services, then continue
+the patient's journey through appointment, consultation, treatment,
+admission and billing.
 
-The system is designed around hospital-wise data management,
-microservice architecture, and easy access to hospital resources
-such as doctors, rooms and beds.
+📌 Key Features Summary
 
-👨‍💻 Backend Focus
+Feature                      Status / Purpose
 
-Java + Spring Boot + Spring Data JPA + REST API + Microservices + API
-Gateway + Eureka Server + Load Balancing + OpenFeign + MySQL
+🏥 Hospital Management       Core
+🏢 Department Management     Core
+👨‍⚕️ Doctor Management         Core
+👨‍💼 Staff Management          Core
+🛏️ Room / Bed Management     Core
+💊 Medicine Management       Core
+🧑 Patient Management        Core
+📅 Appointment Management    Core
+💉 Prescription Management   Core
+🧪 Lab Management            Core
+📋 Medical History           Core
+💳 Billing                   Core
+🔎 Hospital Discovery        Key Feature
+👨‍⚕️ Doctor Discovery          Key Feature
+🛏️ Bed Availability          Key Feature
+🚑 Emergency Mode            Next-Level
+🏥 Hospital Comparison       Next-Level
+🕐 Smart Appointment Slots   Next-Level
+🤖 AI Recommendation         Future
+🔔 Notification Service      Future
+📝 Audit Service             Future
+📊 Analytics Service         Future
+⚡ Redis                     Future
+📱 Patient Portal            Future
+🔐 RBAC / Security           Future
+☁️ Cloud Deployment          Future
 
-📌 Project Status
+👨‍💻 Backend Development Philosophy
 
-🚧 MediCRM is under active development.
+MediCRM follows these principles:
 
-New microservices and hospital-management modules are being added
-incrementally.
+Modular microservices
+
+Clean layered architecture
+
+REST-first APIs
+
+Hospital-wise data isolation
+
+Service discovery through Eureka
+
+Centralized routing through API Gateway
+
+Load-balanced service instances
+
+OpenFeign for internal service communication
+
+JPA for persistence
+
+MySQL for relational data
+
+Centralized exception handling
+
+Scalable architecture for future AI, analytics and notifications
+
+🏁 Final Architecture
+
+                         🌐 CLIENT
+                            │
+                            ▼
+                     🚪 API GATEWAY
+                            │
+                            ▼
+                     ⚖️ LOAD BALANCER
+                            │
+          ┌─────────────────┼─────────────────┐
+          │                 │                 │
+          ▼                 ▼                 ▼
+      🏥 Hospital       👨‍⚕️ Doctor        🧑 Patient
+       Service           Service           Service
+          │                 │                 │
+          ├───────┬─────────┼─────────┬───────┤
+          ▼       ▼         ▼         ▼       ▼
+       🛏️ Room  👨‍💼 Staff  📅 Appointment  💊 Prescription
+          │                           │
+          ▼                           ▼
+       💊 Medicine                 🧪 Lab
+                                      │
+                                      ▼
+                                   💳 Billing
+
+              🧭 EUREKA SERVER
+                    │
+             Service Discovery
+
+        ⚡ Redis        📝 Audit
+           │               │
+           └───────┬───────┘
+                   ▼
+              🐬 MySQL
+
+🚧 Project Status
+
+MediCRM Backend is under active development.
+
+The architecture is being developed incrementally from core
+hospital-management services toward a scalable platform containing
+hospital discovery, doctor/bed availability, smart appointments,
+emergency support, analytics, notifications and AI-assisted
+recommendations.
+
+👨‍💻 Project Focus
+
+Backend
+
+Java • Spring Boot • Spring Data JPA • REST API • Microservices • API
+Gateway • Eureka Server • Load Balancing • OpenFeign • MySQL
+
+Product Focus
+
+Hospital Management + Hospital Discovery + Doctor Availability + Bed
+Availability + Patient Journey + Emergency Support
