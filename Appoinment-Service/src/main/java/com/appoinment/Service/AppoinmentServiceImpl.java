@@ -1,35 +1,32 @@
 package com.appoinment.Service;
-import com.appoinment.Exception.AppoinmentIdNotFound;
-import com.medicrm.exception.HospitalIdNotFound;
-import feign.FeignException;
 
 import com.appoinment.DTO.AppoinmentDTO;
-
+import com.appoinment.Exception.AppoinmentIdNotFound;
 import com.appoinment.Microservice.HospitalService;
 import com.appoinment.Respositry.AppoinmentRepositry;
 import com.appoinment.entity.Appoinment;
+import com.medicrm.exception.HospitalIdNotFound;
+import feign.FeignException;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
-public class AppoinmentServiceImpl implements AppoinmentService{
+public class AppoinmentServiceImpl implements AppoinmentService {
 
     @Autowired
     ModelMapper modelMapper;
+
     @Autowired
     AppoinmentRepositry appoinmentRepositry;
+
     @Autowired
     HospitalService hospitalService;
 
 
-
-
-// Add the appoinment in a Particular Hospital
-
+    // Add Appointment
     @Override
     public AppoinmentDTO add(AppoinmentDTO appoinmentDTO) {
 
@@ -51,35 +48,41 @@ public class AppoinmentServiceImpl implements AppoinmentService{
         return modelMapper.map(save, AppoinmentDTO.class);
     }
 
-    // get all Appoinment
+
+    // Get All Appointment
     @Override
     public List<AppoinmentDTO> all() {
+
         List<Appoinment> all = appoinmentRepositry.findAll();
 
         return all.stream()
-                .map(appoinment -> modelMapper.map(all,AppoinmentDTO.class))
+                .map(appoinment ->
+                        modelMapper.map(appoinment, AppoinmentDTO.class)
+                )
                 .toList();
     }
 
-    // get single appoinment
+
+    // Get Single Appointment
     @Override
     public AppoinmentDTO getSingleAppId(Long appId) {
 
-        Optional<Appoinment> byId = appoinmentRepositry.findById(appId);
-        if(byId==null)
-        {
-            throw new AppoinmentIdNotFound("Appoinment Id Not Found");
-        }
+        Appoinment appoinment = appoinmentRepositry.findById(appId)
+                .orElseThrow(() ->
+                        new AppoinmentIdNotFound(
+                                "Appoinment Id Not Found: " + appId
+                        )
+                );
 
-        return modelMapper.map(byId,AppoinmentDTO.class);
+        return modelMapper.map(appoinment, AppoinmentDTO.class);
     }
 
 
-    // update the code by id
-
-
+    // Update Appointment
     @Override
-    public AppoinmentDTO updateApp(Long appId, AppoinmentDTO appoinmentDTO) {
+    public AppoinmentDTO updateApp(
+            Long appId,
+            AppoinmentDTO appoinmentDTO) {
 
         Appoinment byId = appoinmentRepositry.findById(appId)
                 .orElseThrow(() ->
@@ -88,7 +91,10 @@ public class AppoinmentServiceImpl implements AppoinmentService{
                         )
                 );
 
-        Appoinment map = modelMapper.map(appoinmentDTO, Appoinment.class);
+        Appoinment map = modelMapper.map(
+                appoinmentDTO,
+                Appoinment.class
+        );
 
         byId.setName(map.getName());
         byId.setAge(map.getAge());
@@ -103,15 +109,29 @@ public class AppoinmentServiceImpl implements AppoinmentService{
         return modelMapper.map(save, AppoinmentDTO.class);
     }
 
+
+    // Delete Appointment
     @Override
     public String deleteApp(Long appId) {
-        Optional<Appoinment> byId = appoinmentRepositry.findById(appId);
-        if(byId==null)
-        {
-            throw new AppoinmentIdNotFound("Appoinment id not found");
+
+        if (!appoinmentRepositry.existsById(appId)) {
+
+            throw new AppoinmentIdNotFound(
+                    "Appoinment Id not found: " + appId
+            );
         }
 
         appoinmentRepositry.deleteById(appId);
+
         return "Appoinment Deleted";
+    }
+
+
+    // Find Appointment by Hospital ID
+
+
+    public List<Appoinment> findyHospital(Long hospitalId) {
+
+        return appoinmentRepositry.findByHospitalId(hospitalId);
     }
 }

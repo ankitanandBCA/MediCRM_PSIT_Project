@@ -4,8 +4,10 @@ import com.appoinment.entity.Appoinment;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public interface AppoinmentRepositry extends JpaRepository<Appoinment,Long> {
 
-    void findByHospitalId(Long hospitalId);
+    List<Appoinment> findByHospitalId(Long hospitalId);
 }
